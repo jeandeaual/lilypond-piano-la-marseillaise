@@ -1,25 +1,32 @@
-\version "2.18.2"
+\version "2.20.0"
 
 \include "articulate.ly"
 
-% From http://lists.gnu.org/archive/html/lilypond-user/2012-02/msg00253.html
+% From https://lists.gnu.org/archive/html/lilypond-user/2012-02/msg00253.html
+% and https://lists.gnu.org/archive/html/lilypond-user/2020-11/msg00125.html
 tweakWholeNoteTremolo =
-  #(define-music-function (parser location y¹off-y²off) (pair?)
+  #(define-music-function (y-offsets) (pair?)
     "Change the whole note tremolo orientation (default is horizontal)"
     #{
-      \once \override Beam.gap = #1.3
-      \once \override Beam.extra-offset = #(cons 0 (car y¹off-y²off))
-      \once \override Beam.stencil =
-      #(lambda (grob)
-          (let* ((pos (ly:grob-property grob 'positions)))
-            (ly:grob-set-property! grob 'positions
-              (cons (car pos)  (+ (cdr pos) (cdr y¹off-y²off))))
-            (ly:beam::print grob)))
+      \once {
+        \override Beam.gap = #1.3
+        \override Beam.extra-offset = #(cons 0 (car y-offsets))
+        \override Beam.positions =
+          #(grob-transformer 'positions (lambda (grob orig)
+            (cons (car orig) (+ (cdr orig) (cdr y-offsets)))))
+      }
     #})
 
 \header {
   title = "La Marseillaise"
   composer = "Claude-Joseph Rouget de l’Isle"
+  author = \markup \fromproperty #'header:composer
+  subject = \markup \concat { \fromproperty #'header:title " Piano Partition" }
+  keywords = #(string-join '(
+    "music"
+    "partition"
+    "piano"
+  ) ", ")
   tagline = ##f
 }
 
@@ -140,11 +147,10 @@ left = \relative c' {
   <b b'>4 <g g'> <a a'> <b b'>
   <c c'>4 <c c'> <ees ees'> <ees ees'>
   <d d'>4 <d d'> <d d'> <d d'>
-  %\makeClusters { d1 d' }
-  %d2\glissando d'
-  %\makeClusters { d,1 d' }
-  %d,2\glissando d'
-  \repeat unfold 2 { \tweakWholeNoteTremolo #'(-4.4 . 3.3) \repeat tremolo 16 { d32 d' } }
+  \repeat unfold 2 {
+    \tweakWholeNoteTremolo #'(-4.4 . 3.3)
+    \repeat tremolo 16 { d32 d' }
+  }
   <bes bes,>4 <bes bes,> <g g,> <bes bes,>
   d4 d, <d d'>8 r8 <d d'>8 <d d'>
   <g g'>4 <d' g b>8. <d g b>16 <d g b>4 <d g b>
