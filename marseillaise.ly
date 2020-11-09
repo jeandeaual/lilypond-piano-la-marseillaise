@@ -45,6 +45,7 @@ global = {
 
 altoVoice = \relative c' {
   \global
+  \clef treble
   \dynamicUp
 
   r2 r8 r16 d16\f d8. d16
@@ -97,6 +98,7 @@ verse = \lyricmode {
 
 right = \relative c'' {
   \global
+  \clef treble
 
   <b, d g>4\f <b d g>8. <b d g>16 <b d g>4 d
   <b d g>4 <b d g> <d fis a> <d fis a>
@@ -131,6 +133,7 @@ right = \relative c'' {
 
 left = \relative c' {
   \global
+  \clef bass
 
   <g,, g'>4 <g g'> <g g'> <d' d'>
   <g, g'>4 <b b'> <d d'> <c c'>
@@ -176,7 +179,7 @@ pianoPart = \new PianoStaff \with {
   midiInstrument = "acoustic grand"
 } <<
   \new Staff = "right" \right
-  \new Staff = "left" { \clef bass \left }
+  \new Staff = "left" \left
 >>
 
 \book {
