@@ -207,6 +207,11 @@ pianoPart = \new PianoStaff \with {
 
 \book {
   \bookOutputSuffix "fingering"
+
+  \header {
+    pdftitle = \markup \concat { \fromproperty #'header:title " (With Fingering)" }
+  }
+
   \score {
     <<
       \altoVoicePart
